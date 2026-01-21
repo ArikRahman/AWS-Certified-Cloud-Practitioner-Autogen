@@ -32,24 +32,12 @@
    "practice-exam/practice-exam-22.md"
    "practice-exam/practice-exam-23.md"])
 
-(defn expand-details [content]
-  ;; Remove <details> and </details> tags entirely
-  ;; Replace <summary>text</summary> with **Answer:** (or similar)
-  ;; This makes hidden content visible in the EPUB
-  (-> content
-      (str/replace #"<details>\s*" "")
-      (str/replace #"</details>\s*" "")
-      (str/replace #"<summary>(.*?)</summary>" "**Answer:** $1")
-      (str/replace #"(?i)<b>show answer</b>" "**Answer:**")))
-
 (defn process-content [file]
   (let [content (slurp file)]
     ;; Files in 'sections/' reference images as "../images/file.png".
     ;; We strip the "../" so the path becomes "images/file.png",
     ;; which is valid relative to the repo root where we run the epub build.
-    (-> content
-        (str/replace "../images" "images")
-        expand-details)))
+    (str/replace content "../images" "images")))
 
 (println "Reading and processing files...")
 
